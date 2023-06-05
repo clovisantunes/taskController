@@ -15,22 +15,28 @@ import Task from './src/Tarefa';
 export default function App(){
 
   const [ task, setTask] = useState('');
-  const [ list, setList] = useState([
-    {
-      key: '1',
-      item: 'Teste de tarefa'
-    },
-    { 
-      key: '2',
-      item:' Tarefa dois'
-    },
-    { 
-      key: '3',
-      item:' Tarefa tres'
-    },
-  ])
+  const [ list, setList] = useState([])
+
+
   function handleAdd(){
-    alert(task)
+    if(task === ''){
+      return;
+    }
+
+    const data = {
+      key: Date.now(),
+      item: task
+    }
+
+    setList(oldArray => [data, ...oldArray])
+    setTask('')
+  }
+
+  function handleDelete(item){
+    let filterItem = list.filter((task) =>{
+      return(task.item !==item)
+    })  
+    setList(filterItem)
   }
 
   return(
@@ -50,7 +56,7 @@ export default function App(){
         <FlatList 
           data={list}
           keyExtractor={(item) => {item.key}}
-          renderItem={({item}) => <Task data={item}/>} 
+          renderItem={({item}) => <Task data={item} deleteItem={() =>handleDelete(item.item)}/>} 
           style={styles.list}
         />
     </View>
